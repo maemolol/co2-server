@@ -12,5 +12,12 @@ namespace Controllers;
 [Route("/")]
 public class AuthController : ControllerBase
 {
-    
+    private readonly AppDbContext _context;
+    private readonly JwtService _jwt;
+
+    public AuthController(AppDbContext context, IConfiguration config)
+    {
+        _context = context;
+        _jwt = new JwtService(config);
+    }
 }

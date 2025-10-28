@@ -3,7 +3,7 @@ using Dtos;
 
 namespace Validation;
 
-public interface UserLoginValidation : IValidator<UserLoginDto>
+public class UserLoginValidation : IValidator<UserLoginDto>
 {
     public Dictionary<string, string> Validate(UserLoginDto user)
     {

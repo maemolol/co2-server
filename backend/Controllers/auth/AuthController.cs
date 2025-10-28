@@ -57,9 +57,44 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserLoginDto user)
+    public async Task<IActionResult> Login([FromBody] UserLoginDto request)
     {
         var validator = new UserLoginValidation();
+        var errors = validator.Validate(request);
+
+        if (errors.Any())
+            return BadRequest(new { errors });
+
+        try
+        {
+            var username = request.username;
+            var user = await context.Users.FirstOrDefaultAsync(u => u.username == username);
+
+            if (user == null)
+            {
+                Console.WriteLine("User not found");
+                return BadRequest("Incorrect username or password");
+            }
+
+            bool passCorrect = BCrypt.Net.BCrypt.Verify(request.password, user.password_hash);
+
+            if (!passCorrect)
+            {
+                Console.WriteLine("User password incorrect");
+                return BadRequest("Incorrect username or password");
+            }
+
+            Console.WriteLine($"User {user.username} logged in successfully");
+
+            return Ok(new {
+                user_uid = user.user_uid,
+                username = user.username
+            });
+        }
+        catch (Exception ex)
+        {
+            return Problem("Login error: " + ex.Message);
+        }
 
         
     }

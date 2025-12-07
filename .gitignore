@@ -1,3 +1,4 @@
+# gitignore
 backend/obj/
 backend/bin/
 backend/.env

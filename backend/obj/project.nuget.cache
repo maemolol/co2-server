@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "u1XRhwBIMdk=",
+  "dgSpecHash": "O7O5ww5lIQ0=",
   "success": true,
   "projectFilePath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
   "expectedPackageFiles": [
+    "/home/maemo/.nuget/packages/bcrypt/1.0.0/bcrypt.1.0.0.nupkg.sha512",
+    "/home/maemo/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.aspnetcore.openapi/9.0.8/microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore/9.0.8/microsoft.entityframeworkcore.9.0.8.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.8/microsoft.entityframeworkcore.abstractions.9.0.8.nupkg.sha512",
@@ -24,7 +26,22 @@
     "/home/maemo/.nuget/packages/microsoft.identitymodel.tokens/8.14.0/microsoft.identitymodel.tokens.8.14.0.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512",
     "/home/maemo/.nuget/packages/system.identitymodel.tokens.jwt/8.14.0/system.identitymodel.tokens.jwt.8.14.0.nupkg.sha512",
-    "/home/maemo/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.9/microsoft.aspnetcore.app.ref.9.0.9.nupkg.sha512"
+    "/home/maemo/.nuget/packages/microsoft.netcore.app.ref/9.0.11/microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
+    "/home/maemo/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.11/microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512",
+    "/home/maemo/.nuget/packages/microsoft.netcore.app.host.linux-x64/9.0.11/microsoft.netcore.app.host.linux-x64.9.0.11.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'BCrypt 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "projectPath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
+      "libraryId": "BCrypt",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
 }

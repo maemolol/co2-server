@@ -8,12 +8,14 @@ public class AppDbContext : DbContext
     public DbSet<Users> Users { get; set; }
     public DbSet<Devices> Devices { get; set; }
     public DbSet<Measurement> Measurements { get; set; }
+    public DbSet<DeviceUsers> DeviceUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Users>().ToTable("users");
         modelBuilder.Entity<Devices>().ToTable("devices");
         modelBuilder.Entity<Measurement>().ToTable("measurements");
+        modelBuilder.Entity<DeviceUsers>().ToTable("device_users");
 
         base.OnModelCreating(modelBuilder);
 
@@ -27,6 +29,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Devices>(entity =>
         {
             entity.HasKey(d => d.device_id);
+            entity.Property(d => d.device_mac);
             entity.Property(d => d.name).IsRequired().HasMaxLength(100);
             entity.Property(d => d.location).HasMaxLength(100);
             entity.Property(d => d.registered_at).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -47,6 +50,19 @@ public class AppDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(m => m.device_id)
                   .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<DeviceUsers>(entity =>
+        {
+            entity.HasKey(du => du.id);
+            entity.HasOne<Devices>()
+                .WithMany()
+                .HasForeignKey(du => du.device_id)
+                .OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne<Users>()
+                .WithMany()
+                .HasForeignKey(du => du.user_id)
+                .OnDelete(DeleteBehavior.SetNull);
         });
     }
 }

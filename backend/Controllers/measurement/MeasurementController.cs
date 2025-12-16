@@ -11,8 +11,13 @@ namespace Controllers;
 public class MeasurementController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly string _authKey;
 
-    public MeasurementController(AppDbContext context) => _context = context;
+    public MeasurementController(AppDbContext context)
+    {
+        _context = context;
+        _authKey = Environment.GetEnvironmentVariable("API_AUTH_KEY");
+    }
 
     private static string NormaliseMac(string address)
     {
@@ -29,6 +34,15 @@ public class MeasurementController : ControllerBase
         });
     }
 
+    private bool KeyAutorised(Microsoft.AspNetCore.Http.HttpRequest request)
+    {
+        if(!string.IsNullOrEmpty(_authKey) && request.Headers.TryGetValue("X-Api-Key", out var key) && key.ToString() == _authKey)
+        {
+            return true;
+        }
+        return false;
+    }
+
     [HttpPost("measure")]
     public async Task<IActionResult> GetMeasurements([FromBody] MeasurementInDto request)
     {
@@ -37,7 +51,7 @@ public class MeasurementController : ControllerBase
         if(request == null) return BadRequest(new { error = "Body is required."});
         if(string.IsNullOrEmpty(request.device_mac)) errors["deviceMac"] = "Device MAC required.";
         if(request.user_id == Guid.Empty) errors["userId"] = "User ID is required.";
-        if(request.device_users_id == Guid.Empty) errors["devuserId"] = "Device/user ID required.";
+        // if(request.device_users_id == Guid.Empty) errors["devuserId"] = "Device/user ID required.";
         if(request.co2 <= 0 || request.co2 > 10000) errors["co2"] = "Invalid CO2 value.";
         if(errors.Count > 0) return BadRequest(new {errors});
 
@@ -60,9 +74,53 @@ public class MeasurementController : ControllerBase
                 await _context.SaveChangesAsync();
             }
 
-            var link = request.device_users_id;
-            
-        } catch (Exception ex) {}
+            var link = await _context.DeviceUsers.FirstOrDefaultAsync(du => du.device_mac == mac && du.user_id == request.user_id);
+
+            if(link == null)
+            {
+                if(!KeyAutorised(Request)) return Unauthorized(new {error = "Device not enrolled with this user."});
+
+                link = new DeviceUsers
+                {
+                  device_mac = mac,
+                  user_id = request.user_id,
+                  hash = null,
+                };
+                _context.DeviceUsers.Add(link);
+                await _context.SaveChangesAsync();
+            }
+
+            if(!KeyAutorised(Request))
+            {
+                if(!Request.Headers.TryGetValue("X-Api-Key", out var key) || string.IsNullOrEmpty(key)) return Unauthorized(new {error = "API key required."});
+                if(string.IsNullOrEmpty(link.hash) || !BCrypt.Net.BCrypt.Verify(key.ToString(), link.hash)) return Unauthorized(new {error = "Invalid device hash."});
+            }
+
+            var tStamp = (request.timestamp ?? DateTime.UtcNow).ToUniversalTime();
+
+            var entry = new Measurement
+            {
+                measurement_id = Guid.NewGuid(),
+                device_mac = mac,
+                user_id = request.user_id,
+                device_users_id = link.id,
+                co2 = request.co2,
+                temperature = request.temperature,
+                humidity = request.humidity,
+                timestamp = tStamp
+            };
+
+            _context.Measurements.Add(entry);
+            await _context.SaveChangesAsync();
+
+            var message = $"Got measurement: device {mac}, device-user ID {link.id}, CO2 {request.co2} at {tStamp:o}";
+            Console.WriteLine(message);
+
+            return Ok(new {message, data = MeasurementOutDto.FromEntity(entry)});
+        } catch (Exception ex)
+        {
+            return BadRequest(new {error = ex});
+        }
         
     }
 }

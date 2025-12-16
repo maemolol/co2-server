@@ -40,7 +40,7 @@ public class Measurement
 
 	public DateTime timestamp { get; set; }
 	public float? temperature { get; set; }
-	public float? co2 { get; set; }
+	public double co2 { get; set; }
 	public float? humidity { get; set; }
 }
 

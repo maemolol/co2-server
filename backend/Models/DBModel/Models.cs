@@ -29,6 +29,12 @@ public class Measurement
 	[Key]
 	public Guid measurement_id { get; set; } = Guid.NewGuid();
 
+	[ForeignKey(nameof(Devices))]
+	public string? device_mac {get; set;}
+
+	[ForeignKey(nameof(Users))]
+	public Guid user_id {get; set;}
+
 	[ForeignKey(nameof(DeviceUsers))]
 	public Guid device_users_id { get; set; }
 

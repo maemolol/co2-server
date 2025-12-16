@@ -32,7 +32,7 @@ public class DeviceUsersController : ControllerBase
     [HttpPost("enroll")]
     public async Task<IActionResult> Enroll(DeviceUsersRequestDto request)
     {
-        if(request == null) return BadRequest(new {error = "Info required."});
+        if(request == null) return BadRequest(new {error = "Body required."});
         if(request.user_id == Guid.Empty) return BadRequest(new {error = "User ID required."});
         if(string.IsNullOrEmpty(request.device_mac)) return BadRequest(new {error = "Device MAC required"});
 

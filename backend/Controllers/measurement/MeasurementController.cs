@@ -1,6 +1,7 @@
 using Models;
 using Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Controllers;
 
@@ -31,6 +32,37 @@ public class MeasurementController : ControllerBase
     [HttpPost("measure")]
     public async Task<IActionResult> GetMeasurements([FromBody] MeasurementInDto request)
     {
+        var errors = new Dictionary<string, string>();
+
+        if(request == null) return BadRequest(new { error = "Body is required."});
+        if(string.IsNullOrEmpty(request.device_mac)) errors["deviceMac"] = "Device MAC required.";
+        if(request.user_id == Guid.Empty) errors["userId"] = "User ID is required.";
+        if(request.device_users_id == Guid.Empty) errors["devuserId"] = "Device/user ID required.";
+        if(request.co2 <= 0 || request.co2 > 10000) errors["co2"] = "Invalid CO2 value.";
+        if(errors.Count > 0) return BadRequest(new {errors});
+
+        try
+        {
+            var mac = NormaliseMac(request.device_mac);
+
+            var device = await _context.Devices.FirstOrDefaultAsync(d => d.device_mac == mac);
+            if(device == null)
+            {
+                device = new Devices
+                {
+                    device_mac = mac,
+                    name = "Auto-registered",
+                    location = "Unknown",
+                    registered_at = DateTime.UtcNow,
+                    user_id = request.user_id
+                };
+                _context.Devices.Add(device);
+                await _context.SaveChangesAsync();
+            }
+
+            var link = request.device_users_id;
+            
+        } catch (Exception ex) {}
         
     }
 }

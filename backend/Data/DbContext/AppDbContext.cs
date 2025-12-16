@@ -48,8 +48,16 @@ public class AppDbContext : DbContext
             entity.Property(m => m.humidity);
             entity.HasOne<Devices>()
                   .WithMany()
-                  .HasForeignKey(m => m.device_users_id)
+                  .HasForeignKey(m => m.device_mac)
                   .OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne<Users>()
+                .WithMany()
+                .HasForeignKey(m => m.user_id)
+                .OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne<DeviceUsers>()
+                .WithMany()
+                .HasForeignKey(m => m.device_users_id)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<DeviceUsers>(entity =>

@@ -109,5 +109,21 @@ public class DeviceController : ControllerBase
         
         var mac = NormaliseMac(dMac);
         if(!IsValidMac(mac)) return BadRequest(new { error = "Invalid MAC address format. Please change to AA:BB:CC:DD:EE:FF."});
+
+        try
+        {
+            var device = await _context.Devices.AsNoTracking().FirstOrDefaultAsync(d => d.device_mac == mac);
+            if(device == null)
+                return NotFound(new {error = "Device not found. Please register said device."});
+            
+            var message = $"Device {device.device_mac} found.";
+            Console.WriteLine(message);
+
+            return Ok(new{message, data = DeviceOutDto.FromEntity(device)});
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to get device: {ex.Message}.");
+            return StatusCode(500, new { error = "Failed to get device." });
+        }
     }
 }

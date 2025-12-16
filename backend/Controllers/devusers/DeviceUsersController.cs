@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Dtos;
+using Models;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace Controllers;
 
@@ -29,6 +32,37 @@ public class DeviceUsersController : ControllerBase
     [HttpPost("enroll")]
     public async Task<IActionResult> Enroll(DeviceUsersRequestDto request)
     {
-        return Ok();
+        if(request == null) return BadRequest(new {error = "Info required."});
+        if(request.user_id == Guid.Empty) return BadRequest(new {error = "User ID required."});
+        if(string.IsNullOrEmpty(request.device_mac)) return BadRequest(new {error = "Device MAC required"});
+
+        var mac = NormaliseMac(request.device_mac);
+
+        var device = await _context.Devices.FirstOrDefaultAsync(d => d.device_mac == mac);
+        if(device == null)
+        {
+            device = new Devices
+            {
+                device_mac = mac,
+                name = "Auto-registered",
+                location = "Unknown",
+                registered_at = DateTime.UtcNow,
+                user_id = request.user_id
+            };
+            _context.Devices.Add(device);
+            await _context.SaveChangesAsync();
+        }
+
+        var existing = await _context.DeviceUsers.FirstOrDefaultAsync(du => du.device_mac == mac && du.user_id == request.user_id);
+        if(existing != null) return Conflict(new {error = "Device already enrolled with user."});
+
+        var key = Convert.ToBase64String(RandomNumberGenerator.GetBytes(25));
+        var encHash = BCrypt.Net.BCrypt.HashPassword(key);
+
+        var devuser = new DeviceUsers {device_mac = mac, user_id = request.user_id, hash = encHash};
+        _context.DeviceUsers.Add(devuser);
+        await _context.SaveChangesAsync();
+
+        return Ok(new DeviceUsersResponseDto{id = devuser.id, hash = encHash});
     }
 }

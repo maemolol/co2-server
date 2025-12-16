@@ -8,6 +8,7 @@ namespace Controllers;
 
 [ApiController]
 [Route("/devices")]
+[Produces("application/json")]
 public class DeviceController : ControllerBase
 {
     private readonly AppDbContext _context;

@@ -73,7 +73,31 @@ public class DeviceController : ControllerBase
             return Ok( new { message, data = DeviceOutDto.FromEntity(device) });
         } catch (Exception ex)
         {
-            return BadRequest ( new { error = ex });
+            Console.WriteLine($"Failed to register device: {ex.Message}.");
+            return StatusCode(500, new { error = "Failed to register device." });
+        }
+    }
+
+    [HttpGet("user/{uId:guid}")]
+    public async Task<IActionResult> LookupUser(Guid uId)
+    {
+        try
+        {
+            var devices = await _context.Devices
+                .AsNoTracking()
+                .Where(d => d.user_id == uId)
+                .OrderByDescending(d => d.registered_at)
+                .ToListAsync();
+            
+            var message = $"Found {devices.Count} devices for user {uId}.";
+            Console.WriteLine(message);
+
+            var data = devices.Select(d => DeviceOutDto.FromEntity(d)).ToList();
+            return Ok(new{message, data});
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to get device list: {ex.Message}.");
+            return StatusCode(500, new { error = "Failed to get device list" });
         }
     }
 }

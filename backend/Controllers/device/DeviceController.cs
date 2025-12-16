@@ -97,7 +97,17 @@ public class DeviceController : ControllerBase
         } catch (Exception ex)
         {
             Console.WriteLine($"Failed to get device list: {ex.Message}.");
-            return StatusCode(500, new { error = "Failed to get device list" });
+            return StatusCode(500, new { error = "Failed to get device list." });
         }
+    }
+
+    [HttpGet("id/{dMac:string}")]
+    public async Task<IActionResult> LookupDevice(string dMac)
+    {
+        if(string.IsNullOrEmpty(dMac))
+            return BadRequest(new {error = "No MAC address specified. Please specify a MAC address."});
+        
+        var mac = NormaliseMac(dMac);
+        if(!IsValidMac(mac)) return BadRequest(new { error = "Invalid MAC address format. Please change to AA:BB:CC:DD:EE:FF."});
     }
 }

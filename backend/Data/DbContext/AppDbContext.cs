@@ -21,14 +21,13 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Users>(entity =>
         {
-            entity.HasKey(u => u.user_uid);
+            entity.HasKey(u => u.user_id);
             entity.Property(u => u.username).IsRequired().HasMaxLength(100);
             entity.Property(u => u.password_hash).IsRequired().HasMaxLength(256);
         });
 
         modelBuilder.Entity<Devices>(entity =>
         {
-            entity.HasKey(d => d.device_id);
             entity.Property(d => d.device_mac);
             entity.Property(d => d.name).IsRequired().HasMaxLength(100);
             entity.Property(d => d.location).HasMaxLength(100);

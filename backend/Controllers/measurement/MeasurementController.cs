@@ -123,4 +123,92 @@ public class MeasurementController : ControllerBase
         }
         
     }
+
+    [HttpGet("measurements/{device_mac}")]
+    public async Task<IActionResult> GetByMac(string device_mac, [FromQuery] int limit = 25, [FromQuery] int offset = 0)
+    {
+        try
+        {
+            limit = Math.Clamp(limit, 1, 1000);
+            offset = Math.Max(0, offset);
+            var mac = NormaliseMac(device_mac);
+
+            var query = _context.Measurements
+                .AsNoTracking()
+                .Where(m => m.device_mac == mac)
+                .OrderByDescending(m => m.timestamp);
+
+            var total = await query.CountAsync();
+            var items = await query.Skip(offset).Take(limit).ToListAsync();
+
+            return Ok(new
+            {
+                total,
+                limit,
+                offset,
+                data = items.Select(MeasurementOutDto.FromEntity)
+            });
+        } catch(Exception ex)
+        {
+            return BadRequest(new {error = ex.Message});
+        }
+    }
+
+    [HttpGet("measurements/recent")]
+    public async Task<IActionResult> GetRecent([FromQuery] int limit = 25, [FromQuery] int offset = 0)
+    {
+        try
+        {
+            limit = Math.Clamp(limit, 1, 1000);
+            offset = Math.Max(0, offset);
+
+            var query = _context.Measurements
+                .AsNoTracking()
+                .OrderByDescending(m => m.timestamp);
+
+            var total = await query.CountAsync();
+            var items = await query.Skip(offset).Take(limit).ToListAsync();
+
+            return Ok(new
+            {
+                total,
+                limit,
+                offset,
+                data = items.Select(MeasurementOutDto.FromEntity)
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Failed to fetch recent: {ex.Message}");
+            return StatusCode(500, new { error = "Failed to fetch measurements." });
+        }
+    }
+
+    [HttpGet("measurements/{deviceId}/latest")]
+    public async Task<IActionResult> GetLatestByDevice(string device_mac)
+    {
+        try
+        {
+            var mac = NormaliseMac(device_mac);
+
+            var item = await _context.Measurements
+                .AsNoTracking()
+                .Where(m => m.device_mac == mac)
+                .OrderByDescending(m => m.timestamp)
+                .FirstOrDefaultAsync();
+
+            if (item == null)
+                return NotFound(new { error = "No measurements yet." });
+
+            var message = $"> Latest measurement fetched: device={mac}, co2={item.co2}, ts={item.timestamp:o}";
+            Console.WriteLine(message);
+
+            return Ok(new { message, data = MeasurementOutDto.FromEntity(item) });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Failed to get latest measurement: {ex.Message}");
+            return StatusCode(500, new { error = "Failed to get latest measurement." });
+        }
+    }
 }

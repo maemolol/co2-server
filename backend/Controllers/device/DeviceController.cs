@@ -102,13 +102,13 @@ public class DeviceController : ControllerBase
         }
     }
 
-    [HttpGet("id/{dMac:string}")]
-    public async Task<IActionResult> LookupDevice(string dMac)
+    [HttpGet("id/{device_mac}")]
+    public async Task<IActionResult> LookupDevice(string device_mac)
     {
-        if(string.IsNullOrEmpty(dMac))
+        if(string.IsNullOrEmpty(device_mac))
             return BadRequest(new {error = "No MAC address specified. Please specify a MAC address."});
         
-        var mac = NormaliseMac(dMac);
+        var mac = NormaliseMac(device_mac);
         if(!IsValidMac(mac)) return BadRequest(new { error = "Invalid MAC address format. Please change to AA:BB:CC:DD:EE:FF."});
 
         try

@@ -3,11 +3,11 @@ import {Link} from "react-router-dom";
 
 function Home() {
     return (
-        <div class="min-h-screen bg-slate-950 text-slate-100">
+        <div className="min-h-screen bg-slate-950 text-slate-100">
             <title>CO2 sensor</title>
             <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
                 <a className="font-semibold" href="/s">CO2 Monitor</a>
-                <div class="space-x-3 text-sm">
+                <div className="space-x-3 text-sm">
                     <Link to="/login" className="header-login">Login</Link>
                     <a href="/login" className="px-3 py-1.5 rounded-md border border-slate-700 hover:bg-slate-800">Login</a>
                     <a href="/register" className="px-3 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white">Register</a>

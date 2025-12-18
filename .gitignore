@@ -2,3 +2,4 @@
 backend/obj/
 backend/bin/
 backend/.env
+.env

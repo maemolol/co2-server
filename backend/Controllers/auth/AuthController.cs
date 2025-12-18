@@ -13,12 +13,12 @@ namespace Controllers;
 [Route("/")]
 public class AuthController : ControllerBase
 {
-    private readonly AppDbContext context;
+    private readonly AppDbContext _context;
     private readonly JwtService _jwt;
 
     public AuthController(AppDbContext context, IConfiguration config)
     {
-        this.context = context;
+        _context = context;
         _jwt = new JwtService(config);
     }
 
@@ -33,19 +33,19 @@ public class AuthController : ControllerBase
 
         try
         {
-            if (await context.Users.AnyAsync(u => u.username == user.username))
+            if (await _context.Users.AnyAsync(u => u.username == user.username))
                 return BadRequest("Username is already registered.");
 
             var newUser = new Users
             {
-                user_uid = Guid.NewGuid(),
+                user_id = Guid.NewGuid(),
                 username = user.username,
                 password_hash = BCrypt.Net.BCrypt.HashPassword(user.password)
             };
 
-            using var transaction = await context.Database.BeginTransactionAsync();
-            await context.Users.AddAsync(newUser);
-            await context.SaveChangesAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
             return Ok("User registered successfully");
@@ -68,7 +68,7 @@ public class AuthController : ControllerBase
         try
         {
             var username = request.username;
-            var user = await context.Users.FirstOrDefaultAsync(u => u.username == username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.username == username);
 
             if (user == null)
             {
@@ -87,7 +87,7 @@ public class AuthController : ControllerBase
             Console.WriteLine($"User {user.username} logged in successfully");
 
             return Ok(new {
-                user_uid = user.user_uid,
+                user_id = user.user_id,
                 username = user.username
             });
         }

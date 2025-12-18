@@ -6,16 +6,16 @@ namespace Models;
 
 public class Users {
 	[Key]
-	public Guid user_uid { get; set; } = Guid.NewGuid();
+	public Guid user_id { get; set; } = Guid.NewGuid();
 	public string? username { get; set; }
 	public string? password_hash { get; set; }
 }
 
 public class Devices
 {
+	
 	[Key]
-	public Guid device_id { get; set; } = Guid.NewGuid();
-	public string? device_mac { get; set; }
+	public string device_mac { get; set; } = default!;
 	public string? name { get; set; }
 	public string? location { get; set; }
 	public DateTime registered_at { get; set; }

@@ -3,8 +3,7 @@ namespace Dtos;
 
 public class DeviceRegisterDto
 {
-    public Guid device_id { get; set; }
-    public string? device_mac { get; set; }
+    public string device_mac { get; set; } = default!;
     public string? name { get; set; }
     public string? location { get; set; }
     public DateTime registered_at { get; set; }

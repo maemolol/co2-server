@@ -1,7 +1,10 @@
 import type {JSX} from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Footer from "./components/footer/footer";
+//import Footer from "./components/footer/footer";
 import Home from "./pages/home/home";
+import {Dashboard} from "./pages/dashboard/dashboard";
+import {AppLayout} from "./components/layout/AppLayout";
+import {Login} from "./pages/login/login";
 
 function ProtectedRoute({ children }: { children: JSX.Element}){
   const user = localStorage.getItem("user");
@@ -19,6 +22,17 @@ export function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/app" element={
+          <ProtectedRoute>
+            <AppLayout />
+        </ProtectedRoute>
+        }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -1,41 +1,87 @@
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
+Console.OutputEncoding = Encoding.UTF8;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var connectionString = DbConnectionService.TestDatabaseConnection();
+
+// EF Core + PostgreSQL
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+// Connect Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "CO2 Sensor API", Version = "v1" });
+});
+
+builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
+
+// CORS
+var frontendOrigin = Environment.GetEnvironmentVariable("ALLOWED_FRONTEND_PORT") ?? "http://localhost:5173";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendOnly", policy =>
+    {
+        policy.WithOrigins(frontendOrigin)
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Apply database migrations automatically on startup if needed
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        
+        // Check if there are pending migrations
+        var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
+        
+        if (pendingMigrations.Any())
+        {
+            Console.WriteLine($"📦 Found {pendingMigrations.Count()} pending migration(s). Applying...");
+            foreach (var migration in pendingMigrations)
+            {
+                Console.WriteLine($"   - {migration}");
+            }
+            
+            await dbContext.Database.MigrateAsync();
+            Console.WriteLine("✅ Database migrations applied successfully");
+        }
+        else
+        {
+            Console.WriteLine("✅ Database is up to date. No migrations needed.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Migration failed: {ex.Message}");
+        throw;
+    }
 }
 
-app.UseHttpsRedirection();
+// Connect Swagger UI in Development
+app.UseMiddleware<SwaggerAuth>();
+app.UseSwagger();
+app.UseSwaggerUI();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// CORS
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseCors("FrontendOnly");
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+app.UseStaticFiles();
+app.MapHealthChecks("/health");
+app.MapControllers();
 
-app.Run();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+app.Run($"http://0.0.0.0:{port}");

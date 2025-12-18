@@ -48,11 +48,14 @@ public class AuthController : ControllerBase
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
-            return Ok("User registered successfully");
+            var message = $"User {newUser.user_id} (username: {newUser.username}) has been registered.";
+            Console.WriteLine(message);
+
+            return Ok(new { message, data = newUser });
         }
         catch (Exception ex)
         {
-            return Problem("Registration error: " + ex.Message);
+            return StatusCode(500, "Registration error: " + ex.Message);
         }
     }
     
@@ -84,12 +87,10 @@ public class AuthController : ControllerBase
                 return BadRequest("Incorrect username or password");
             }
 
-            Console.WriteLine($"User {user.username} logged in successfully");
+            var message = $"User {user.username} logged in successfully.";
+            Console.WriteLine(message);
 
-            return Ok(new {
-                user_id = user.user_id,
-                username = user.username
-            });
+            return Ok(new {message, data = user});
         }
         catch (Exception ex)
         {

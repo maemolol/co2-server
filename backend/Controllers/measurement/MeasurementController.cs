@@ -50,7 +50,7 @@ public class MeasurementController : ControllerBase
 
         if(request == null) return BadRequest(new { error = "Body is required."});
         if(string.IsNullOrEmpty(request.device_mac)) errors["deviceMac"] = "Device MAC required.";
-        if(request.user_id == Guid.Empty) errors["userId"] = "User ID is required.";
+        //if(request.user_id == Guid.Empty) errors["userId"] = "User ID is required.";
         // if(request.device_users_id == Guid.Empty) errors["devuserId"] = "Device/user ID required.";
         if(request.co2 <= 0 || request.co2 > 10000) errors["co2"] = "Invalid CO2 value.";
         if(errors.Count > 0) return BadRequest(new {errors});
@@ -58,6 +58,24 @@ public class MeasurementController : ControllerBase
         try
         {
             var mac = NormaliseMac(request.device_mac);
+
+            var link = await _context.DeviceUsers.FirstOrDefaultAsync(du => du.device_mac == mac );
+
+            if(link == null)
+            {
+                // if(!KeyAutorised(Request)) return Unauthorized(new {error = "Device not enrolled with this user."});
+
+                return Unauthorized(new {error = "Device not enrolled with this user."});
+
+                /* link = new DeviceUsers
+                {
+                  device_mac = mac,
+                  user_id = request.user_id,
+                  hash = null,
+                };
+                _context.DeviceUsers.Add(link);
+                await _context.SaveChangesAsync(); */
+            }
 
             var device = await _context.Devices.FirstOrDefaultAsync(d => d.device_mac == mac);
             if(device == null)
@@ -68,25 +86,9 @@ public class MeasurementController : ControllerBase
                     name = "Auto-registered",
                     location = "Unknown",
                     registered_at = DateTime.UtcNow,
-                    user_id = request.user_id
+                    user_id = link.user_id
                 };
                 _context.Devices.Add(device);
-                await _context.SaveChangesAsync();
-            }
-
-            var link = await _context.DeviceUsers.FirstOrDefaultAsync(du => du.device_mac == mac && du.user_id == request.user_id);
-
-            if(link == null)
-            {
-                if(!KeyAutorised(Request)) return Unauthorized(new {error = "Device not enrolled with this user."});
-
-                link = new DeviceUsers
-                {
-                  device_mac = mac,
-                  user_id = request.user_id,
-                  hash = null,
-                };
-                _context.DeviceUsers.Add(link);
                 await _context.SaveChangesAsync();
             }
 
@@ -102,7 +104,7 @@ public class MeasurementController : ControllerBase
             {
                 measurement_id = Guid.NewGuid(),
                 device_mac = mac,
-                user_id = request.user_id,
+                user_id = link.user_id,
                 device_users_id = link.id,
                 co2 = request.co2,
                 temperature = request.temperature,

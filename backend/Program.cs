@@ -10,7 +10,7 @@ var connectionString = DbConnectionService.TestDatabaseConnection();
 
 // EF Core + PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString + ";Include Error Detail=true"));
 
 // Connect Swagger
 builder.Services.AddSwaggerGen(c =>

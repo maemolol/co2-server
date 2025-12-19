@@ -1,29 +1,44 @@
 using Models;
+using System.Text.Json.Serialization;
 namespace Dtos;
 
 public class DeviceRegisterDto
 {
-    public string device_mac { get; set; } = default!;
-    public string? name { get; set; }
-    public string? location { get; set; }
-    public DateTime registered_at { get; set; }
-    public Guid user_id { get; set; }
+  [JsonPropertyName("device_mac")]
+  public string DeviceMac { get; set; } = null!;
+
+  [JsonPropertyName("name")]
+  public string? Name { get; set; }
+
+  [JsonPropertyName("location")]
+  public string? Location { get; set; }
+
+  [JsonPropertyName("registered_at")]
+  public DateTime RegisteredAt { get; set; }
+
+  [JsonPropertyName("user_id")]
+  public Guid UserId { get; set; }
 }
 
 public class DeviceOutDto
 {
-    public string device_mac { get; init; } = default!;
-    public string? name {get; init; }
-    public string? location { get; init; }
-    public DateTime registered_at { get; init; }
-    public Guid user_id { get; init; }
+  [JsonPropertyName("device_mac")]
+  public string DeviceMac { get; init; } = default!;
+  public string? name {get; init; }
+  public string? location { get; init; }
 
-    public static DeviceOutDto FromEntity(Devices d) => new()
-    {
-      device_mac = d.device_mac!,
-      name = d.name,
-      location = d.location,
-      registered_at = d.registered_at,
-      user_id = d.user_id
-    };
+  [JsonPropertyName("registered_at")]
+  public DateTime RegisteredAt { get; init; }
+
+  [JsonPropertyName("user_id")]
+  public Guid UserId { get; init; }
+
+  public static DeviceOutDto FromEntity(Devices d) => new()
+  {
+    DeviceMac = d.device_mac!,
+    name = d.name,
+    location = d.location,
+    RegisteredAt = d.registered_at,
+    UserId = d.user_id
+  };
 }

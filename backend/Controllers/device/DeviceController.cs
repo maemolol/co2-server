@@ -36,14 +36,15 @@ public class DeviceController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] DeviceRegisterDto request)
     {
+        Console.WriteLine($"RAW user_id from DTO: {request.UserId}");
         if(request == null) return BadRequest(new { error = "Body is required."});
-        if(string.IsNullOrWhiteSpace(request.device_mac)) return BadRequest( new { error = "Sensor MAC address required." });
+        if(string.IsNullOrWhiteSpace(request.DeviceMac)) return BadRequest( new { error = "Sensor MAC address required." });
         
-        var mac = NormaliseMac(request.device_mac);
+        var mac = NormaliseMac(request.DeviceMac);
         if(!IsValidMac(mac)) return BadRequest(new { error = "Invalid MAC address format. Please change to AA:BB:CC:DD:EE:FF."});
 
-        var name = (request.name ?? "untitled").Trim();
-        var location = (request.location ?? "Unknown location").Trim();
+        var name = (request.Name ?? "untitled").Trim();
+        var location = (request.Location ?? "Unknown location").Trim();
 
         try
         {
@@ -52,7 +53,7 @@ public class DeviceController : ControllerBase
 
             if (!string.IsNullOrEmpty(name))
             {
-                var isNameReal = await _context.Devices.AnyAsync(d => d.user_id == request.user_id && d.name != null && d.name.ToLower() == name.ToLower());
+                var isNameReal = await _context.Devices.AnyAsync(d => d.user_id == request.UserId && d.name != null && d.name.ToLower() == name.ToLower());
                 
                 if(isNameReal)
                     return Conflict(new { error = "Device with such name is already associated with user"});
@@ -64,7 +65,7 @@ public class DeviceController : ControllerBase
                 name = name,
                 location = location,
                 registered_at = DateTime.UtcNow,
-                user_id = request.user_id
+                user_id = request.UserId
             };
 
             _context.Devices.Add(device);

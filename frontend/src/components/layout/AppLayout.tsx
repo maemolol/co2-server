@@ -7,7 +7,7 @@ export function AppLayout() {
       <aside className="w-64 border-r border-slate-200 bg-slate-100/80 dark:border-slate-800 dark:bg-slate-900/80 hidden md:flex flex-col">
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
           <Link to="/app" className="text-lg font-semibold text-slate-900 dark:text-white">
-            CO₂ Monitor
+            CO2 Monitor
           </Link>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             ESP32 · Air Quality

@@ -3,12 +3,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {Footer} from "./components/footer/footer";
 import { Header } from "./components/header/header";
 import Home from "./pages/home/home";
-import {Dashboard} from "./pages/dashboard/dashboard";
+import Dashboard from "./pages/dashboard/dashboard";
 import {AppLayout} from "./components/layout/AppLayout";
 import {Login} from "./pages/login/login";
 import { Register } from "./pages/register/register";
 import { ThemeProvider } from "./components/themec/themec";
-import { DeviceConnect } from "./pages/devcon/devcon";
+import DeviceConnect from "./pages/devcon/devcon";
+import { ProfilePage } from "./pages/profile/profile";
 
 function ProtectedRoute({ children }: { children: JSX.Element}){
   const user = localStorage.getItem("user");
@@ -63,6 +64,7 @@ export function App() {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="devices/connect" element={<DeviceConnect />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

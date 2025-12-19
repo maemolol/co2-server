@@ -47,7 +47,7 @@ export function Header() {
               </svg>
             </div>
             <span className="text-lg font-semibold text-slate-900 dark:text-white">
-              CO₂ Monitor
+              CO2 Monitor
             </span>
           </Link>
 
@@ -70,25 +70,11 @@ export function Header() {
             )}
             
             <Link
-              to="/contacts"
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
-            >
-              Contact
-            </Link>
-            <Link
               to="app/documentation"
               className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
             >
               Documentation
             </Link>
-            <a
-              href="https://github.com/alanarzumanjan/carbon_dioxide_meter"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
-            >
-              GitHub
-            </a>
           </nav>
 
           {/* Right side: Theme + Auth buttons */}

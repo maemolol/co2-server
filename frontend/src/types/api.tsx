@@ -11,7 +11,7 @@ export interface LoginDTO {
 }
 
 export interface User {
-  id: string;          // Guid
+  user_id: string;          // Guid
   username: string;
   email: string;
 }
@@ -19,18 +19,18 @@ export interface User {
 // === Devices ===
 
 export interface DeviceRegisterDTO {
-  id: string;          // MAC "AA:BB:CC:DD:EE:FF"
+  device_mac: string;          // MAC "AA:BB:CC:DD:EE:FF"
   name?: string | null;
   location?: string | null;
-  userId: string;      // Guid
+  user_id: string;      // Guid
 }
 
 export interface Device {
-  id: string;
+  device_mac: string;
   name?: string | null;
   location?: string | null;
   registered_at: string; // ISO
-  user_Id: string;       // Guid
+  user_id: string;       // Guid
 }
 
 // === Measurements ===

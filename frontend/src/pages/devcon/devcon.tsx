@@ -1,135 +1,136 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { apiRegisterDevice } from "../../api/client";
-import type { DeviceRegisterDTO, User } from "../../types/api";
+import type { DeviceRegisterDTO } from "../../types/api";
 
-export function DeviceConnect() {
-  const raw = localStorage.getItem("user");
-  const user: User | null = raw ? JSON.parse(raw) : null;
+function getUserIdFromStorage(): string | null {
+  try {
+    const raw = localStorage.getItem("user");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed.user_id ?? null;
+  } catch {
+    return null;
+  }
+}
 
-  const [form, setForm] = useState<DeviceRegisterDTO>({
-    id: "",
-    name: "",
-    location: "",
-    userId: user?.id ?? "",
-  });
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export default function DeviceConnect() {
+  const [mac, setMac] = useState("");
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!user) return;
+  const userId = getUserIdFromStorage();
 
-    setLoading(true);
-    setError(null);
-    setMessage(null);
-
-    const res = await apiRegisterDevice({ ...form, userId: user.id });
-
-    setLoading(false);
-
-    if ("error" in res) {
-      setError(res.error);
-    } else {
-      setMessage(res.message ?? "Device registered!");
-    }
+  if (!userId) {
+    return (
+      <div className="p-6 text-center text-red-600">
+        User not logged in. Please log in first.
+      </div>
+    );
   }
 
+  const isValidMac = (mac: string) =>
+    /^[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}$/.test(mac.trim());
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    if (!isValidMac(mac)) {
+      setError("Invalid MAC address format. Use AA:BB:CC:DD:EE:FF");
+      return;
+    }
+
+    setLoading(true);
+
+    const payload: DeviceRegisterDTO = {
+      device_mac: mac.trim().toUpperCase(),
+      name: name.trim() || null,
+      location: location.trim() || null,
+      user_id: userId,
+    };
+
+    try {
+      const res = await apiRegisterDevice(payload);
+      if ("error" in res) {
+        setError(res.error);
+      } else {
+        setSuccess("Device registered successfully!");
+        setMac("");
+        setName("");
+        setLocation("");
+      }
+    } catch (err) {
+      setError("Failed to register device. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Connect new device</h1>
-        <p className="text-sm text-slate-400">
-          Register your ESP32 CO₂ monitor by its MAC address, then use the
-          generated User ID in your firmware.
-        </p>
-      </div>
+    <div className="max-w-md mx-auto p-6 bg-red-700 rounded-lg shadow space-y-4">
+      <h1 className="text-2xl font-semibold">Add a new device</h1>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        {error && (
-          <div className="text-sm text-red-400 bg-red-950/40 border border-red-800 rounded-lg px-3 py-2">
-            {error}
-          </div>
-        )}
-        {message && (
-          <div className="text-sm text-emerald-300 bg-emerald-950/40 border border-emerald-800 rounded-lg px-3 py-2">
-            {message}
-          </div>
-        )}
+      {error && (
+        <div className="text-red-600 bg-red-100 p-2 rounded">{error}</div>
+      )}
+      {success && (
+        <div className="text-green-600 bg-green-100 p-2 rounded">{success}</div>
+      )}
 
-        <div className="space-y-1">
-          <label className="text-sm text-slate-200">Device MAC (Id)</label>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <label className="block">
+          <span className="block font-medium mb-1">Device MAC *</span>
           <input
             type="text"
+            value={mac}
+            onChange={(e) => setMac(e.target.value)}
             placeholder="AA:BB:CC:DD:EE:FF"
-            value={form.id}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, id: e.target.value }))
-            }
+            className="w-full border rounded px-3 py-2"
+            disabled={loading}
             required
-            className="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm"
           />
-        </div>
+        </label>
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label className="text-sm text-slate-200">Name</label>
-            <input
-              type="text"
-              placeholder="Bedroom"
-              value={form.name ?? ""}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, name: e.target.value }))
-              }
-              className="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm"
-            />
-          </div>
+        <label className="block">
+          <span className="block font-medium mb-1">Name</span>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Optional device name"
+            className="w-full border rounded px-3 py-2"
+            disabled={loading}
+          />
+        </label>
 
-          <div className="space-y-1">
-            <label className="text-sm text-slate-200">Location</label>
-            <input
-              type="text"
-              placeholder="Home office"
-              value={form.location ?? ""}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, location: e.target.value }))
-              }
-              className="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm"
-            />
-          </div>
-        </div>
+        <label className="block">
+          <span className="block font-medium mb-1">Location</span>
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Optional location"
+            className="w-full border rounded px-3 py-2"
+            disabled={loading}
+          />
+        </label>
 
         <button
           type="submit"
-          disabled={loading || !user}
-          className="rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 px-4 py-2 text-sm font-medium"
+          disabled={loading || !isValidMac(mac)}
+          className={`w-full py-2 rounded text-white ${
+            loading || !isValidMac(mac)
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-red-500 transition-colors hover:bg-red-600"
+          }`}
         >
-          {loading ? "Registering..." : "Register device"}
+          {loading ? "Registering..." : "Register Device"}
         </button>
       </form>
-
-      {/* Firmware helper */}
-      {user && (
-        <section className="mt-6 rounded-2xl bg-slate-900 border border-slate-800 p-4 text-xs">
-          <p className="font-semibold mb-2">Firmware helper</p>
-          <p className="text-slate-300 mb-1">
-            Use this data in your ESP32 code when sending measurements:
-          </p>
-          <ul className="list-disc list-inside text-slate-400 mb-3">
-            <li>UserId: <span className="font-mono">{user.id}</span></li>
-            <li>API URL: <span className="font-mono">POST {`{API_URL}/measurements`}</span></li>
-          </ul>
-          <pre className="bg-slate-950 rounded-lg border border-slate-800 p-3 overflow-auto">
-{`{
-  "deviceId": "AA:BB:CC:DD:EE:FF",
-  "userId": "${user.id}",
-  "co2": 750,
-  "temperature": 23.5,
-  "humidity": 45.0
-}`}
-          </pre>
-        </section>
-      )}
     </div>
   );
 }

@@ -1,18 +1,9 @@
-import {Link} from "react-router-dom";
 // import "./home.css";
 
 function Home() {
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100">
+        <div className="min-h-screen bg-zinc-950 text-slate-100">
             <title>CO2 sensor</title>
-            <header className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-                <a className="font-semibold" href="/s">CO2 Monitor</a>
-                <div className="space-x-3 text-sm">
-                    <Link to="/login" className="header-login">Login</Link>
-                    <a href="/login" className="px-3 py-1.5 rounded-md border border-slate-700 hover:bg-slate-800">Login</a>
-                    <a href="/register" className="px-3 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white">Register</a>
-                </div>
-            </header>
             <main className="px-6 md:px-16 py-10">
                 <section className="grid md:grid-cols-2 gap-10 items-center">
                     <div className="demo-text-button">
@@ -22,7 +13,7 @@ function Home() {
                             <a href="/register"><button type="button" className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium">Register</button></a>
                         </div>
                     </div>
-                    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+                    <div className="bg-zinc-700 border border-zinc-800 rounded-2xl p-6">
                         <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">Example dashboard</p>
                         <div className="h-40 rounded-xl bg-gradient-to-tr from-slate-900 via-indigo-900 to-slate-800 flex items-center justify-center text-slate-200 text-sm">CO2 placeholder</div>
                         <div className="mt-4 grid grid-cols-3 gap-3 text-xs">

@@ -36,7 +36,7 @@ function PublicLayout({ children }: { children: JSX.Element }) {
 
 function AppLayoutWrapper() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-700 text-slate-900 dark:text-slate-100 flex flex-col">
       <Header />
       <div className="flex-1 flex">
         <AppLayout />

@@ -1,16 +1,31 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   apiGetUserDevices,
   apiGetDeviceMeasurements,
 } from "../../api/client";
 import type { Device, Measurement } from "../../types/api";
 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+
 function getUserIdFromStorage(): string | null {
   try {
     const raw = localStorage.getItem("user");
     if (!raw) return null;
+
     const parsed = JSON.parse(raw);
-    return parsed.user_id ?? null;
+
+    // supports BOTH shapes:
+    // { id: "..." }
+    // { user: { id: "..." } }
+    return parsed.user_id ?? parsed.user?.user_id ?? null;
   } catch {
     return null;
   }
@@ -26,34 +41,6 @@ export default function Dashboard() {
   const [metric, setMetric] = useState<Metric>("co2");
   const [loadingDevices, setLoadingDevices] = useState(true);
   const refreshTimer = useRef<number | null>(null);
-
-  // === Load user devices (infinite loading on error / no response) ===
-  useEffect(() => {
-    const userId = getUserIdFromStorage();
-    if (!userId) return;
-
-    let cancelled = false;
-
-    const loadDevices = async () => {
-      try {
-        const res = await apiGetUserDevices(userId);
-        if (!cancelled && "data" in res) {
-          const data = Array.isArray(res.data) ? res.data : [];
-          setDevices(data);
-          setSelectedDevice((prev) => prev ?? data[0] ?? null);
-          setLoadingDevices(false);
-        }
-      } catch {
-        // swallow error → infinite loading
-      }
-    };
-
-    loadDevices();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     const userId = getUserIdFromStorage();
@@ -76,28 +63,25 @@ export default function Dashboard() {
         }
       } catch (err) {
         console.error("LookupUser failed", err);
-        // infinite loading by design
       }
     };
 
-
     loadDevices();
-
 
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // === Auto-refresh measurements every 10s ===
   useEffect(() => {
     if (!selectedDevice) return;
 
     const loadMeasurements = async () => {
       try {
         const res = await apiGetDeviceMeasurements(selectedDevice.device_mac, 25);
-        if ("data" in res && Array.isArray(res.data)) {
-          setMeasurements(res.data);
+        if ("data" in res) {
+          const data = Array.isArray(res.data) ? res.data : [];
+          setMeasurements(data);
         }
       } catch {
         // ignore
@@ -116,80 +100,29 @@ export default function Dashboard() {
     };
   }, [selectedDevice]);
 
+  // Latest measurement for display
   const latestMeasurement = useMemo(() => {
     if (measurements.length === 0) return null;
     return measurements.reduce((latest, current) =>
-      new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest
+      new Date(current.timestamp) > new Date(latest.timestamp)
+        ? current
+        : latest
     );
   }, [measurements]);
 
+  // Prepare chart data for Recharts (latest first for plotting)
   const chartData = useMemo(() => {
-    if (measurements.length === 0) return [];
-
-    const max = Math.max(
-      ...measurements.map((m) =>
-        metric === "co2"
-          ? m.co2
-          : metric === "temperature"
-          ? m.temperature
-          : m.humidity
-      )
-    );
-
     return measurements
       .slice()
       .reverse()
-      .map((m, i) => ({
-        x: i,
-        y:
-          metric === "co2"
-            ? m.co2 / max
-            : metric === "temperature"
-            ? m.temperature / max
-            : m.humidity / max,
+      .map((m) => ({
+        timestamp: new Date(m.timestamp).toLocaleTimeString(),
+        co2: m.co2,
+        temperature: m.temperature,
+        humidity: m.humidity,
       }));
-  }, [measurements, metric]);
+  }, [measurements]);
 
-  const gridLines = useMemo(() => {
-    const lines = [];
-    if (metric === "co2") {
-      const maxYppm = Math.max(
-        1000,
-        Math.ceil(Math.max(...measurements.map((m) => m.co2)) / 500) * 500
-      );
-
-      for (let val = 0; val <= maxYppm; val += 500) {
-        const yPos = 300 - (val / maxYppm) * 280;
-        lines.push({ yPos, label: `${val} ppm` });
-      }
-    } else {
-      const maxY =
-        metric === "temperature"
-          ? Math.max(
-              30,
-              Math.ceil(Math.max(...measurements.map((m) => m.temperature)))
-            )
-          : Math.max(
-              100,
-              Math.ceil(Math.max(...measurements.map((m) => m.humidity)))
-            );
-      const step = maxY / 5;
-      for (let i = 0; i <= 5; i++) {
-        const val = i * step;
-        const yPos = 300 - (val / maxY) * 280;
-        lines.push({
-          yPos,
-          label:
-            metric === "temperature"
-              ? `${val.toFixed(1)} °C`
-              : `${val.toFixed(1)} %`,
-        });
-      }
-    }
-    return lines;
-  }, [measurements, metric]);
-
-  // Infinite loading spinner if LookupUser fails or stalls
   if (devices.length === 0 && loadingDevices) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -206,42 +139,52 @@ export default function Dashboard() {
     );
   }
 
+  // Units for latest measurement
+  const unit = {
+    co2: "ppm",
+    temperature: "°C",
+    humidity: "%",
+  }[metric];
+
   return (
     <div className="p-6 space-y-6">
-      <div className="flex flex-wrap gap-4 items-center">
-        <select
-          className="border rounded px-3 py-2"
-          value={selectedDevice?.device_mac}
-          onChange={(e) =>
-            setSelectedDevice(
-              devices.find((d) => d.device_mac === e.target.value) ?? null
-            )
-          }
-        >
-          {devices.map((d) => (
-            <option key={d.device_mac} value={d.device_mac}>
-              {d.name ?? d.device_mac}
-            </option>
-          ))}
-        </select>
+      <div>
+        <div className="flex flex-wrap gap-4 items-center">
+          <select
+            className="border rounded-lg px-3 py-2"
+            value={selectedDevice?.device_mac}
+            onChange={(e) =>
+              setSelectedDevice(
+                devices.find((d) => d.device_mac === e.target.value) ?? null
+              )
+            }
+          >
+            {devices.map((d) => (
+              <option key={d.device_mac} value={d.device_mac}>
+                {d.name ?? d.device_mac}
+              </option>
+            ))}
+          </select>
 
-        <div className="flex gap-2">
-          {(["co2", "temperature", "humidity"] as Metric[]).map((m) => (
-            <button
-              key={m}
-              onClick={() => setMetric(m)}
-              className={`px-4 py-2 rounded border ${
-                metric === m
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700"
-              }`}
-            >
-              {m.toUpperCase()}
-            </button>
-          ))}
+          <div className="flex gap-2">
+            {(["co2", "temperature", "humidity"] as Metric[]).map((m) => (
+              <button
+                key={m}
+                onClick={() => setMetric(m)}
+                className={`px-4 py-2 rounded-lg border ${
+                  metric === m
+                    ? "bg-rose-600 text-white"
+                    : "bg-white text-gray-700"
+                }`}
+              >
+                {m.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
+      {/* Latest measurement display */}
       {latestMeasurement && (
         <div className="text-lg font-semibold">
           Latest:{" "}
@@ -253,47 +196,42 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="border rounded-lg p-4">
-        <svg viewBox="0 0 600 300" className="w-full h-64">
-          {/* Grid lines */}
-          {gridLines.map(({ yPos, label }, i) => (
-            <g key={i}>
-              <line
-                x1={0}
-                y1={yPos}
-                x2={600}
-                y2={yPos}
-                stroke="currentColor"
-                strokeWidth={1}
-                strokeDasharray="4 4"
-              />
-              <text
-                x={5}
-                y={yPos - 5}
-                fontSize={12}
-                fill="currentColor"
-                className="select-none"
-              >
-                {label}
-              </text>
-            </g>
-          ))}
-          {chartData.map((p, i) => {
-            if (i === 0) return null;
-            const prev = chartData[i - 1];
-            return (
-              <line
-                key={i}
-                x1={(i - 1) * (600 / (chartData.length - 1))}
-                y1={300 - prev.y * 280}
-                x2={i * (600 / (chartData.length - 1))}
-                y2={300 - p.y * 280}
-                stroke="currentColor"
-                strokeWidth={2}
-              />
-            );
-          })}
-        </svg>
+      <div style={{ width: "100%", height: 300 }}>
+        <ResponsiveContainer>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="timestamp" />
+            <YAxis
+              domain={
+                metric === "co2"
+                  ? ["dataMin - 100", "dataMax + 100"]
+                  : undefined
+              }
+              tickFormatter={(value) =>
+                metric === "co2" ? `${value} ppm` : value
+              }
+              interval="preserveStartEnd"
+            />
+            <Tooltip
+            labelStyle={{color: "#2c2828ff"}}
+            formatter={(value?: number) => {
+              if (value === undefined || value === null) return "-";
+              if (metric === "co2") return `${value} ppm`;
+              if (metric === "temperature") return `${value.toFixed(1)} °C`;
+              return `${value.toFixed(1)} %`;
+            }}
+          />
+
+            <Line
+              type="monotone"
+              dataKey={metric}
+              stroke="#bb1e1eff"
+              strokeWidth={2}
+              dot={false}
+              isAnimationActive={true}
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

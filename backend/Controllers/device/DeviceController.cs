@@ -128,4 +128,34 @@ public class DeviceController : ControllerBase
             return StatusCode(500, new { error = "Failed to get device." });
         }
     }
+
+    [HttpGet("id/{device_mac}/delete")]
+    public async Task<IActionResult> DeleteDevice(string device_mac)
+    {
+        if(string.IsNullOrEmpty(device_mac))
+            return BadRequest(new {error = "No MAC address specified. Please specify a MAC address."});
+        
+        var mac = NormaliseMac(device_mac);
+        if(!IsValidMac(mac)) return BadRequest(new { error = "Invalid MAC address format. Please change to AA:BB:CC:DD:EE:FF."});
+
+        try
+        {
+            var device = await _context.Devices.AsNoTracking().FirstOrDefaultAsync(d => d.device_mac == mac);
+            if(device == null)
+                return NotFound(new {error = "Device not found. Please register said device."});
+            
+            Console.WriteLine($"Device to be deleted ({device.device_mac}) found.");
+
+            _context.Devices.Remove(device);
+            await _context.SaveChangesAsync();
+
+            var message = $"Device {mac} has been successfully deleted.";
+
+            return Ok(new{message});
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to delete device: {ex.Message}.");
+            return StatusCode(500, new { error = "Failed to delete device." });
+        }
+    }
 }

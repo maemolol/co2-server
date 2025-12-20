@@ -135,7 +135,7 @@ export default function Dashboard() {
 
   if (devices.length === 0) {
     return (
-      <div className="p-6 text-center text-gray-600">
+      <div className="p-6 text-center text-white">
         You have no devices registered. Please register a device.
       </div>
     );

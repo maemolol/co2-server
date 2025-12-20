@@ -13,6 +13,7 @@ export default defineConfig({
     watch: {
       usePolling: true, 
     },
+    allowedHosts: ['.trycloudflare.com'],
   },
   preview: {
     host: '0.0.0.0',

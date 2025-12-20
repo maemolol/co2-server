@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   apiGetUserDevices,
-  apiGetDeviceMeasurements,
+  apiGetDeviceMeasurements
 } from "../../api/client";
 import type { Device, Measurement } from "../../types/api";
 
@@ -41,6 +42,7 @@ export default function Dashboard() {
   const [metric, setMetric] = useState<Metric>("co2");
   const [loadingDevices, setLoadingDevices] = useState(true);
   const refreshTimer = useRef<number | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userId = getUserIdFromStorage();
@@ -173,7 +175,7 @@ export default function Dashboard() {
                 onClick={() => setMetric(m)}
                 className={`px-4 py-2 rounded-lg border ${
                   metric === m
-                    ? "bg-rose-600 text-white"
+                    ? "bg-red-600 text-white"
                     : "bg-white text-gray-700"
                 }`}
               >
@@ -181,6 +183,15 @@ export default function Dashboard() {
               </button>
             ))}
           </div>
+
+          {selectedDevice && (
+            <button
+              onClick={() => navigate(`/app/devices/${selectedDevice.device_mac}`)}
+              className="px-4 py-2 rounded border bg-gray-100 text-gray-800 hover:bg-gray-200"
+            >
+              Manage device
+            </button>
+          )}
         </div>
       </div>
 

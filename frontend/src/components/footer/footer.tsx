@@ -1,24 +1,18 @@
 import { Link } from "react-router-dom";
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-800 bg-slate-950 text-slate-400">
+    <footer className="border-t border-slate-800 bg-zinc-950 text-slate-400">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <span className="text-lg font-semibold text-white">
-                CO₂ Monitor
-              </span>
-            </div>
-            <p className="text-sm text-slate-400 max-w-xs">
-              Real-time air quality monitoring with ESP32. Track CO₂, temperature,
-              and humidity to maintain healthy indoor environments.
+
+        {/* Bottom bar */}
+        <div className="mt-12 pt-8 border-t border-slate-800">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-sm">
+              © 2025 Mark Korobkin. Built with ❤️ using ESP32, C# and Vite.
             </p>
-            <div className="flex space-x-4 mt-4">
+            <div className="flex space-x-6 text-sm">
               <a
                 href="https://github.com/maemolol/co2-server"
                 target="_blank"
@@ -33,92 +27,6 @@ export function Footer() {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
-            </div>
-          </div>
-
-          {/* Product */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Product</h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link to="/register" className="hover:text-white transition-colors">
-                  Get Started
-                </Link>
-              </li>
-              <li>
-                <Link to="/app/dashboard" className="hover:text-white transition-colors">
-                  Dashboard
-                </Link>
-              </li>
-              {/* <li>
-                <a href="#features" className="hover:text-white transition-colors">
-                  Features
-                </a>
-              </li> */}
-              {/* <li>
-                <a href="#pricing" className="hover:text-white transition-colors">
-                  Pricing
-                </a>
-              </li> */}
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Resources</h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <a
-                  href="https://alantech.id.lv/app/documentation"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                >
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://api.alantech.id.lv/swagger"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                >
-                  API Reference
-                </a>
-              </li>
-              <li>
-                <Link to="/contacts" className="hover:text-white transition-colors">
-                  Support
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/yourusername/co2-monitor"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                >
-                  GitHub
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-slate-800">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm">
-              © {currentYear} Mark Korobkin. Built with ❤️ using ESP32, C# and Vite.
-            </p>
-            <div className="flex space-x-6 text-sm">
-              <a href="#privacy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#terms" className="hover:text-white transition-colors">
-                Terms of Service
               </a>
             </div>
           </div>

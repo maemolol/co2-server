@@ -54,14 +54,6 @@ export interface Measurement {
   userId: string;
 }
 
-// === Contacts ===
-
-export interface ContactsDTO {
-  name: string;
-  email: string;
-  message: string;
-}
-
 // === Generic API response ===
 
 export interface ApiErrorResponse {

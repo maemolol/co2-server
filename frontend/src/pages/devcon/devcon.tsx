@@ -71,7 +71,7 @@ export default function DeviceConnect() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-red-700 rounded-lg shadow space-y-4">
+    <div className="max-w-md mx-auto p-6 bg-zinc-600 rounded-lg shadow space-y-4">
       <h1 className="text-2xl font-semibold">Add a new device</h1>
 
       {error && (

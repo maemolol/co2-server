@@ -5,11 +5,10 @@ import type {
     Device,
     DeviceRegisterDTO,
     Measurement,
-    ContactsDTO,
     ApiResponse,
 } from "../types/api";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL ?? "https://brochures-lodge-another-boundaries.trycloudflare.com";
 
 async function request<T>(
   path: string,
@@ -61,6 +60,11 @@ export async function apiRegisterDevice(body: DeviceRegisterDTO) {
   });
 }
 
+export async function apiDeleteDevice(deviceMac: string) {
+  return request<void>(`/devices/id/${deviceMac}/delete`);
+}
+
+
 // === Measurements ===
 
 export async function apiGetDeviceMeasurements(
@@ -72,13 +76,4 @@ export async function apiGetDeviceMeasurements(
 
 export async function apiGetLatestMeasurement(deviceId: string) {
   return request<Measurement>(`/measurements/${deviceId}/latest`);
-}
-
-// === Contacts ===
-
-export async function apiSendContact(body: ContactsDTO) {
-  return request<unknown>("/Contacts", {
-    method: "POST",
-    body: JSON.stringify(body),
-  });
 }

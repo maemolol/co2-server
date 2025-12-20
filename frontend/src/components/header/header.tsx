@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 
 export function Header() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -21,7 +22,10 @@ export function Header() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setIsAuthenticated(false);
-    navigate("/");
+    if (window.location.pathname === "/")
+      forceUpdate();
+    else
+      navigate("/");
   };
 
   return (
@@ -53,12 +57,14 @@ export function Header() {
               </Link>
             )}
             
+            {isAuthenticated && (
             <Link
-              to="devices/connect"
+              to="/app/devices/connect"
               className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
             >
               Add device
             </Link>
+            )}
           </nav>
 
           {/* Right side: Theme + Auth buttons */}
@@ -68,12 +74,6 @@ export function Header() {
             <div className="flex items-center space-x-3">
               {isAuthenticated ? (
                 <>
-                  <Link
-                    to="/app/profile"
-                    className="hidden sm:block rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 transition-colors"
-                  >
-                    Profile
-                  </Link>
                   <button
                     onClick={handleLogout}
                     className="rounded-lg border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 transition-colors"
@@ -85,13 +85,13 @@ export function Header() {
                 <>
                   <Link
                     to="/login"
-                    className="hidden sm:block rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 transition-colors"
+                    className="hidden sm:block rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-zinc-800 transition-colors"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-medium text-white hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-500/50"
+                    className="rounded-lg bg-gradient-to-r from-red-600 to-rose-600 px-4 py-2 text-sm font-medium text-white hover:from-red-500 hover:to-rose-500 transition-all shadow-lg shadow-red-500/50"
                   >
                     Sign up
                   </Link>

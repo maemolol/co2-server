@@ -206,11 +206,11 @@ export default function DeviceHistory() {
                 domain={[0, 100]}
                 />
                 <Tooltip
-                labelStyle={{ color: "#111827" }}
-                formatter={(value, _name, props) => {
-                    if (value == null) return "-";
+                    labelStyle={{ color: "#111827" }}
+                    formatter={(value, _name, props) => {
+                        if (typeof value !== "number") return value;
 
-                    switch (props.dataKey) {
+                        switch (props.dataKey) {
                         case "co2":
                             return `${value} ppm`;
                         case "temperature":
@@ -219,8 +219,8 @@ export default function DeviceHistory() {
                             return `${value.toFixed(1)} %`;
                         default:
                             return value;
-                    }
-                }}
+                        }
+                    }}
                 />
                 {visible.co2 && (
                 <Line

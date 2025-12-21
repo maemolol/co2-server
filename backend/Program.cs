@@ -6,11 +6,25 @@ Console.OutputEncoding = Encoding.UTF8;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = DbConnectionService.TestDatabaseConnection();
+//var connectionString = DbConnectionService.TestDatabaseConnection();
 
 // EF Core + PostgreSQL
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString + ";Include Error Detail=true"));
+builder.Services.AddDbContext<AppDbContext>(options => {
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("Default"),
+        npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()
+        );
+    }
+);
+
+var connectionString = builder.Configuration.GetConnectionString("Default");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "❌ ConnectionStrings:Default is NOT set. Docker env injection failed."
+    );
+}
 
 // Connect Swagger
 builder.Services.AddSwaggerGen(c =>

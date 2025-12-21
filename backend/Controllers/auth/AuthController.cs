@@ -5,7 +5,7 @@ using Validation;
 using Config;
 using Models;
 using Dtos;
-using DevOne.Security.Cryptography.BCrypt;
+using BCrypt;
 
 namespace Controllers;
 
@@ -43,10 +43,8 @@ public class AuthController : ControllerBase
                 password_hash = BCrypt.Net.BCrypt.HashPassword(user.password)
             };
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            await _context.Users.AddAsync(newUser);
+            _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
 
             var message = $"User {newUser.user_id} (username: {newUser.username}) has been registered.";
             Console.WriteLine(message);

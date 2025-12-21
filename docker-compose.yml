@@ -1,71 +1,60 @@
+version: "3.9"
+
 services:
   postgres:
     image: postgres:17
-    container_name: esp32-postgres
+    restart: unless-stopped
+    env_file: .env
     environment:
-      POSTGRES_DB: ${DATABASE}
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${PASSWORD}
-    ports:
-      - "5433:5432"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: esp32-server
     volumes:
       - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${DATABASE}"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
     networks:
-      - co2_network
+      - appnet
 
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-      network: host
-    container_name: esp32-backend
-    env_file:
-      - ./backend/.env
-    environment:
-      ASPNETCORE_URLS: http://+:5000
-      ASPNETCORE_ENVIRONMENT: Development
-      POSTGRES_CONNECTION_STRING: "Host=postgres;Port=5432;Database=${DATABASE};Username=${POSTGRES_USER};Password=${PASSWORD};Include Error Detail=true;"
-      ALLOWED_FRONTEND_PORT: ${ALLOWED_FRONTEND_PORT}
-      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
-      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
-      EMAIL_NAME: ${EMAIL_NAME}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - "${PORT:-5000}:5000"
     restart: unless-stopped
+    env_file: .env
+    environment:
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+      ConnectionStrings__Default: >
+        Host=${POSTGRES_HOST};
+        Port=${POSTGRES_PORT};
+        Database=esp32-server;
+        Username=${POSTGRES_USER};
+        Password=${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
     networks:
-      - co2_network
+      - appnet
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-      network: host
-    container_name: esp32-frontend
-    depends_on:
-      - backend
-    ports:
-      - "8080:80"
+      args:
+        VITE_API_URL: ${VITE_API_URL}
     restart: unless-stopped
+    
     networks:
-      - co2_network
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
-      interval: 30s
-      timeout: 3s
-      start_period: 10s
-      retries: 3
+      - appnet
+
+  cloudflared:
+    build:
+      context: ./cloudflare
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - appnet
 
 volumes:
   pgdata:
 
 networks:
-  co2_network:
+  appnet:
     driver: bridge

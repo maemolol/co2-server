@@ -1,29 +1,22 @@
-FROM node:20-alpine AS builder
-
+# Build stage
+FROM node:20-alpine AS build
 WORKDIR /app
 
-COPY package*.json ./
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
 
-RUN npm ci --production=false
+COPY package*.json ./
+RUN npm install
 
 COPY . .
+RUN npm run build
 
-RUN chmod -R 755 node_modules/.bin && npm run build
-
+# Nginx stage
 FROM nginx:alpine
-
-RUN rm /etc/nginx/conf.d/default.conf
+WORKDIR /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-RUN mkdir -p /var/cache/nginx/client_temp && \
-    chown -R nginx:nginx /var/cache/nginx
+COPY --from=build /app/dist .
 
 EXPOSE 80
-
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
-
 CMD ["nginx", "-g", "daemon off;"]

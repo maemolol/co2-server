@@ -2,15 +2,6 @@
   "version": 3,
   "targets": {
     "net10.0": {
-      "BCrypt/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/DevOne.Security.Cryptography.BCrypt.dll": {}
-        },
-        "runtime": {
-          "lib/DevOne.Security.Cryptography.BCrypt.dll": {}
-        }
-      },
       "BCrypt.Net-Next/4.0.3": {
         "type": "package",
         "compile": {
@@ -498,7 +489,7 @@
       "Microsoft.EntityFrameworkCore.Analyzers/9.0.8": {
         "type": "package"
       },
-      "Microsoft.EntityFrameworkCore.Design/9.0.8": {
+      "Microsoft.EntityFrameworkCore.Design/9.0.0": {
         "type": "package",
         "dependencies": {
           "Humanizer.Core": "2.14.1",
@@ -507,8 +498,8 @@
           "Microsoft.CodeAnalysis.CSharp": "4.8.0",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.8.0",
           "Microsoft.CodeAnalysis.Workspaces.MSBuild": "4.8.0",
-          "Microsoft.EntityFrameworkCore.Relational": "9.0.8",
-          "Microsoft.Extensions.DependencyModel": "9.0.8",
+          "Microsoft.EntityFrameworkCore.Relational": "9.0.0",
+          "Microsoft.Extensions.DependencyModel": "9.0.0",
           "Mono.TextTemplating": "3.0.0"
         },
         "compile": {
@@ -912,13 +903,13 @@
           "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore/9.0.4": {
+      "Swashbuckle.AspNetCore/9.0.6": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.ApiDescription.Server": "9.0.0",
-          "Swashbuckle.AspNetCore.Swagger": "9.0.4",
-          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.4",
-          "Swashbuckle.AspNetCore.SwaggerUI": "9.0.4"
+          "Swashbuckle.AspNetCore.Swagger": "9.0.6",
+          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.6",
+          "Swashbuckle.AspNetCore.SwaggerUI": "9.0.6"
         },
         "build": {
           "build/Swashbuckle.AspNetCore.props": {}
@@ -927,7 +918,7 @@
           "buildMultiTargeting/Swashbuckle.AspNetCore.props": {}
         }
       },
-      "Swashbuckle.AspNetCore.Swagger/9.0.4": {
+      "Swashbuckle.AspNetCore.Swagger/9.0.6": {
         "type": "package",
         "dependencies": {
           "Microsoft.OpenApi": "1.6.25"
@@ -946,10 +937,10 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Swashbuckle.AspNetCore.SwaggerGen/9.0.4": {
+      "Swashbuckle.AspNetCore.SwaggerGen/9.0.6": {
         "type": "package",
         "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "9.0.4"
+          "Swashbuckle.AspNetCore.Swagger": "9.0.6"
         },
         "compile": {
           "lib/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
@@ -962,7 +953,7 @@
           }
         }
       },
-      "Swashbuckle.AspNetCore.SwaggerUI/9.0.4": {
+      "Swashbuckle.AspNetCore.SwaggerUI/9.0.6": {
         "type": "package",
         "compile": {
           "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
@@ -1146,18 +1137,6 @@
     }
   },
   "libraries": {
-    "BCrypt/1.0.0": {
-      "sha512": "/ibwe2Sg7MJR26IrEzW2Rde9/+A+AYXB5Kf9w/8BVLDdzSfUe4W2M7i2efy1Wa9wHh1k0y81Q6h9Ty8C6IrUGA==",
-      "type": "package",
-      "path": "bcrypt/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "bcrypt.1.0.0.nupkg.sha512",
-        "bcrypt.nuspec",
-        "lib/DevOne.Security.Cryptography.BCrypt.dll"
-      ]
-    },
     "BCrypt.Net-Next/4.0.3": {
       "sha512": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
       "type": "package",
@@ -2353,10 +2332,10 @@
         "microsoft.entityframeworkcore.analyzers.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Design/9.0.8": {
-      "sha512": "02e8OcoumSUAES3VkXrMT9EnNCUKWJoifn5+8fFEbAtRhKL3xg2a/Mj6rsAUGF7tkYFox6oKzJCn0jbm6b8Lbw==",
+    "Microsoft.EntityFrameworkCore.Design/9.0.0": {
+      "sha512": "Pqo8I+yHJ3VQrAoY0hiSncf+5P7gN/RkNilK5e+/K/yKh+yAWxdUAI6t0TG26a9VPlCa9FhyklzyFvRyj3YG9A==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.design/9.0.8",
+      "path": "microsoft.entityframeworkcore.design/9.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2365,7 +2344,7 @@
         "build/net8.0/Microsoft.EntityFrameworkCore.Design.props",
         "lib/net8.0/Microsoft.EntityFrameworkCore.Design.dll",
         "lib/net8.0/Microsoft.EntityFrameworkCore.Design.xml",
-        "microsoft.entityframeworkcore.design.9.0.8.nupkg.sha512",
+        "microsoft.entityframeworkcore.design.9.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.design.nuspec"
       ]
     },
@@ -3065,24 +3044,24 @@
         "sqlitepclraw.provider.e_sqlite3.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore/9.0.4": {
-      "sha512": "4hghaogMoS87Ivjj8s7aGuGsxrsjXZpjNvahLsN+zSLrZQcV8zQyiBweBd9AXC1sGkeNYb9/hbeS1EXrZ/hKjQ==",
+    "Swashbuckle.AspNetCore/9.0.6": {
+      "sha512": "q/UfEAgrk6qQyjHXgsW9ILw0YZLfmPtWUY4wYijliX6supozC+TkzU0G6FTnn/dPYxnChjM8g8lHjWHF6VKy+A==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore/9.0.4",
+      "path": "swashbuckle.aspnetcore/9.0.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "build/Swashbuckle.AspNetCore.props",
         "buildMultiTargeting/Swashbuckle.AspNetCore.props",
         "docs/package-readme.md",
-        "swashbuckle.aspnetcore.9.0.4.nupkg.sha512",
+        "swashbuckle.aspnetcore.9.0.6.nupkg.sha512",
         "swashbuckle.aspnetcore.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore.Swagger/9.0.4": {
-      "sha512": "syU8U4Eg3DfhU+BBeDUh66erwDsYOhp82InXbrOsqWP3qoOfQbBtePcTetkLNanovYHYX40alZBE6gQQFtBZkQ==",
+    "Swashbuckle.AspNetCore.Swagger/9.0.6": {
+      "sha512": "Bgyc8rWRAYwDrzjVHGbavvNE38G1Dfgf1McHYm+WUr4TxkvEAXv8F8B1z3Kmz4BkDCKv9A/1COa2t7+Ri5+pLg==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore.swagger/9.0.4",
+      "path": "swashbuckle.aspnetcore.swagger/9.0.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3093,14 +3072,14 @@
         "lib/net9.0/Swashbuckle.AspNetCore.Swagger.pdb",
         "lib/net9.0/Swashbuckle.AspNetCore.Swagger.xml",
         "package-readme.md",
-        "swashbuckle.aspnetcore.swagger.9.0.4.nupkg.sha512",
+        "swashbuckle.aspnetcore.swagger.9.0.6.nupkg.sha512",
         "swashbuckle.aspnetcore.swagger.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore.SwaggerGen/9.0.4": {
-      "sha512": "GnCikaq7kagEckGGsrVnKl2icRQebyr14/7s3T/rQQO7edOIXkxtjTOJZqbazOxaTXBDCDdSInMiYbMQhFnE5Q==",
+    "Swashbuckle.AspNetCore.SwaggerGen/9.0.6": {
+      "sha512": "yYrDs5qpIa4UXP+a02X0ZLQs6HSd1C8t6hF6J1fnxoawi3PslJg1yUpLBS89HCbrDACzmwEGG25il+8aa0zdnw==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore.swaggergen/9.0.4",
+      "path": "swashbuckle.aspnetcore.swaggergen/9.0.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3111,14 +3090,14 @@
         "lib/net9.0/Swashbuckle.AspNetCore.SwaggerGen.pdb",
         "lib/net9.0/Swashbuckle.AspNetCore.SwaggerGen.xml",
         "package-readme.md",
-        "swashbuckle.aspnetcore.swaggergen.9.0.4.nupkg.sha512",
+        "swashbuckle.aspnetcore.swaggergen.9.0.6.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggergen.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore.SwaggerUI/9.0.4": {
-      "sha512": "2ugT2OvZsKHqk/2rMDmuqDuFmtix0NvzlXxAfnfHROVMTovbx7Z0UsOQHZa462DBTgdBFnR2Ss6wm4fypfymdA==",
+    "Swashbuckle.AspNetCore.SwaggerUI/9.0.6": {
+      "sha512": "WGsw/Yop9b16miq8TQd4THxuEgkP5cH3+DX93BrX9m0OdPcKNtg2nNm77WQSAsA+Se+M0bTiu8bUyrruRSeS5g==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore.swaggerui/9.0.4",
+      "path": "swashbuckle.aspnetcore.swaggerui/9.0.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3129,7 +3108,7 @@
         "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.pdb",
         "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.xml",
         "package-readme.md",
-        "swashbuckle.aspnetcore.swaggerui.9.0.4.nupkg.sha512",
+        "swashbuckle.aspnetcore.swaggerui.9.0.6.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
     },
@@ -3379,21 +3358,20 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "BCrypt >= 1.0.0",
       "BCrypt.Net-Next >= 4.0.3",
       "DotNetEnv >= 3.1.1",
       "MailKit >= 4.14.0",
       "Microsoft.AspNetCore.SignalR >= 1.2.0",
       "Microsoft.AspNetCore.SignalR.Core >= 1.2.0",
       "Microsoft.EntityFrameworkCore >= 9.0.8",
-      "Microsoft.EntityFrameworkCore.Design >= 9.0.8",
+      "Microsoft.EntityFrameworkCore.Design >= 9.0.0",
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.8",
       "Microsoft.Extensions.Diagnostics.HealthChecks >= 9.0.8",
       "Microsoft.IdentityModel.Tokens >= 8.15.0",
       "MimeKit >= 4.14.0",
       "Npgsql >= 9.0.3",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4",
-      "Swashbuckle.AspNetCore >= 9.0.4",
+      "Swashbuckle.AspNetCore >= 9.0.6",
       "System.IdentityModel.Tokens.Jwt >= 8.15.0"
     ]
   },
@@ -3440,10 +3418,6 @@
       "net10.0": {
         "targetAlias": "net10.0",
         "dependencies": {
-          "BCrypt": {
-            "target": "Package",
-            "version": "[1.0.0, )"
-          },
           "BCrypt.Net-Next": {
             "target": "Package",
             "version": "[4.0.3, )"
@@ -3472,7 +3446,7 @@
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
-            "version": "[9.0.8, )"
+            "version": "[9.0.0, )"
           },
           "Microsoft.EntityFrameworkCore.Sqlite": {
             "target": "Package",
@@ -3500,7 +3474,7 @@
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
-            "version": "[9.0.4, )"
+            "version": "[9.0.6, )"
           },
           "System.IdentityModel.Tokens.Jwt": {
             "target": "Package",
@@ -3949,7 +3923,7 @@
       "code": "NU1510",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "PackageReference Microsoft.AspNetCore.SignalR wird nicht gekürzt. Erwägen Sie, dieses Paket aus Ihren Abhängigkeiten zu entfernen, da es wahrscheinlich nicht erforderlich ist.",
+      "message": "PackageReference Microsoft.AspNetCore.SignalR will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
       "libraryId": "Microsoft.AspNetCore.SignalR",
       "targetGraphs": [
         "net10.0"
@@ -3959,7 +3933,7 @@
       "code": "NU1510",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "PackageReference Microsoft.AspNetCore.SignalR.Core wird nicht gekürzt. Erwägen Sie, dieses Paket aus Ihren Abhängigkeiten zu entfernen, da es wahrscheinlich nicht erforderlich ist.",
+      "message": "PackageReference Microsoft.AspNetCore.SignalR.Core will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
       "libraryId": "Microsoft.AspNetCore.SignalR.Core",
       "targetGraphs": [
         "net10.0"
@@ -3969,18 +3943,8 @@
       "code": "NU1510",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "PackageReference Microsoft.Extensions.Diagnostics.HealthChecks wird nicht gekürzt. Erwägen Sie, dieses Paket aus Ihren Abhängigkeiten zu entfernen, da es wahrscheinlich nicht erforderlich ist.",
+      "message": "PackageReference Microsoft.Extensions.Diagnostics.HealthChecks will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
       "libraryId": "Microsoft.Extensions.Diagnostics.HealthChecks",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Das Paket \"BCrypt 1.0.0\" wurde nicht mit dem Projektzielframework \"net10.0\", sondern mit \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" wiederhergestellt. Dieses Paket ist mit Ihrem Projekt möglicherweise nicht vollständig kompatibel.",
-      "libraryId": "BCrypt",
       "targetGraphs": [
         "net10.0"
       ]

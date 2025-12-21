@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "C5I2zV/9H6E=",
+  "dgSpecHash": "0y/hsqX5354=",
   "success": true,
   "projectFilePath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
   "expectedPackageFiles": [
-    "/home/maemo/.nuget/packages/bcrypt/1.0.0/bcrypt.1.0.0.nupkg.sha512",
     "/home/maemo/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/maemo/.nuget/packages/bouncycastle.cryptography/2.6.1/bouncycastle.cryptography.2.6.1.nupkg.sha512",
     "/home/maemo/.nuget/packages/dotnetenv/3.1.1/dotnetenv.3.1.1.nupkg.sha512",
@@ -25,7 +24,7 @@
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore/9.0.8/microsoft.entityframeworkcore.9.0.8.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.8/microsoft.entityframeworkcore.abstractions.9.0.8.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.8/microsoft.entityframeworkcore.analyzers.9.0.8.nupkg.sha512",
-    "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.design/9.0.8/microsoft.entityframeworkcore.design.9.0.8.nupkg.sha512",
+    "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.design/9.0.0/microsoft.entityframeworkcore.design.9.0.0.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.8/microsoft.entityframeworkcore.relational.9.0.8.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.sqlite/9.0.8/microsoft.entityframeworkcore.sqlite.9.0.8.nupkg.sha512",
     "/home/maemo/.nuget/packages/microsoft.entityframeworkcore.sqlite.core/9.0.8/microsoft.entityframeworkcore.sqlite.core.9.0.8.nupkg.sha512",
@@ -48,10 +47,10 @@
     "/home/maemo/.nuget/packages/sqlitepclraw.core/2.1.10/sqlitepclraw.core.2.1.10.nupkg.sha512",
     "/home/maemo/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.10/sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",
     "/home/maemo/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.10/sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
-    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore/9.0.4/swashbuckle.aspnetcore.9.0.4.nupkg.sha512",
-    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore.swagger/9.0.4/swashbuckle.aspnetcore.swagger.9.0.4.nupkg.sha512",
-    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore.swaggergen/9.0.4/swashbuckle.aspnetcore.swaggergen.9.0.4.nupkg.sha512",
-    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore.swaggerui/9.0.4/swashbuckle.aspnetcore.swaggerui.9.0.4.nupkg.sha512",
+    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore/9.0.6/swashbuckle.aspnetcore.9.0.6.nupkg.sha512",
+    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore.swagger/9.0.6/swashbuckle.aspnetcore.swagger.9.0.6.nupkg.sha512",
+    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore.swaggergen/9.0.6/swashbuckle.aspnetcore.swaggergen.9.0.6.nupkg.sha512",
+    "/home/maemo/.nuget/packages/swashbuckle.aspnetcore.swaggerui/9.0.6/swashbuckle.aspnetcore.swaggerui.9.0.6.nupkg.sha512",
     "/home/maemo/.nuget/packages/system.codedom/6.0.0/system.codedom.6.0.0.nupkg.sha512",
     "/home/maemo/.nuget/packages/system.composition/7.0.0/system.composition.7.0.0.nupkg.sha512",
     "/home/maemo/.nuget/packages/system.composition.attributedmodel/7.0.0/system.composition.attributedmodel.7.0.0.nupkg.sha512",
@@ -66,7 +65,7 @@
     {
       "code": "NU1510",
       "level": "Warning",
-      "message": "PackageReference Microsoft.AspNetCore.SignalR wird nicht gekürzt. Erwägen Sie, dieses Paket aus Ihren Abhängigkeiten zu entfernen, da es wahrscheinlich nicht erforderlich ist.",
+      "message": "PackageReference Microsoft.AspNetCore.SignalR will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
       "projectPath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
       "warningLevel": 1,
       "filePath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
@@ -78,7 +77,7 @@
     {
       "code": "NU1510",
       "level": "Warning",
-      "message": "PackageReference Microsoft.AspNetCore.SignalR.Core wird nicht gekürzt. Erwägen Sie, dieses Paket aus Ihren Abhängigkeiten zu entfernen, da es wahrscheinlich nicht erforderlich ist.",
+      "message": "PackageReference Microsoft.AspNetCore.SignalR.Core will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
       "projectPath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
       "warningLevel": 1,
       "filePath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
@@ -90,23 +89,11 @@
     {
       "code": "NU1510",
       "level": "Warning",
-      "message": "PackageReference Microsoft.Extensions.Diagnostics.HealthChecks wird nicht gekürzt. Erwägen Sie, dieses Paket aus Ihren Abhängigkeiten zu entfernen, da es wahrscheinlich nicht erforderlich ist.",
+      "message": "PackageReference Microsoft.Extensions.Diagnostics.HealthChecks will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
       "projectPath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
       "warningLevel": 1,
       "filePath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
       "libraryId": "Microsoft.Extensions.Diagnostics.HealthChecks",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "message": "Das Paket \"BCrypt 1.0.0\" wurde nicht mit dem Projektzielframework \"net10.0\", sondern mit \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" wiederhergestellt. Dieses Paket ist mit Ihrem Projekt möglicherweise nicht vollständig kompatibel.",
-      "projectPath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
-      "warningLevel": 1,
-      "filePath": "/home/maemo/esp32-co2-sensor/backend/backend.csproj",
-      "libraryId": "BCrypt",
       "targetGraphs": [
         "net10.0"
       ]

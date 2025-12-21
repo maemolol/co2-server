@@ -8,13 +8,11 @@ import type {
     ApiResponse,
 } from "../types/api";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "https://brochures-lodge-another-boundaries.trycloudflare.com";
-
 async function request<T>(
   path: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(`/api${path}`, {
     headers: {
       "Content-Type": "application/json",
       ...options.headers,
